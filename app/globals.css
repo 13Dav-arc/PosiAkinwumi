@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+.light {
+  --bg: #f7f4ed;
+  --fg: #1c1917;
+  --surface: #eeeae0;
+  --surface-raised: #e5e0d4;
+  --muted: #ded9cc;
+  --muted-fg: #78716c;
+  --border: rgba(60, 50, 40, 0.08);
+  --border-hover: rgba(197, 155, 39, 0.35);
+  --accent: #c59b27;
+  --accent-gold: #d4a359;
+  --accent-tint: rgba(212, 163, 89, 0.12);
+  --accent-fg: #ffffff;
+  --grid-line: rgba(60, 50, 40, 0.03);
+}
+
+.dark {
+  --bg: #121110;
+  --fg: #f4efe6;
+  --surface: #1a1817;
+  --surface-raised: #22201e;
+  --muted: #2c2826;
+  --muted-fg: #a8a29e;
+  --border: rgba(244, 239, 230, 0.08);
+  --border-hover: rgba(212, 163, 89, 0.35);
+  --accent: #d4a359;
+  --accent-gold: #d4a359;
+  --accent-tint: rgba(212, 163, 89, 0.12);
+  --accent-fg: #121110;
+  --grid-line: rgba(244, 239, 230, 0.03);
+}
+
+/* Lenis smooth scrolling rules */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Base Body Styling */
+html,
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  overflow-x: hidden;
+  max-width: 100vw;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Accessibility Focus Ring */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Subtle Editorial Background Grid */
+.bg-grid-editorial {
+  background-size: 48px 48px;
+  background-image: 
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+}
+
+/* Animated Fluid Underline */
+.editorial-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.editorial-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background-color: currentColor;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-link:hover::after,
+.editorial-link:focus-visible::after {
+  width: 100%;
+}
+
+/* Hide scrollbar for touch snap carousel */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Prefers-reduced-motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
