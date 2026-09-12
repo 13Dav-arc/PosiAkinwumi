@@ -19,9 +19,10 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Olamiposi David Akinwumi — Frontend Engineer & System Architect",
+  metadataBase: new URL("https://posiakinwumi.vercel.app"),
+  title: "Olamiposi David Akinwumi — Software Engineer · AI Systems Builder",
   description:
-    "Crafting fast, accessible, and thoughtfully architected web applications with fluid interactions and dependable foundations.",
+    "Crafting resilient web systems, technical developer tooling, and intelligent software architectures with modern agentic workflows.",
   authors: [{ name: "Olamiposi David Akinwumi" }],
   keywords: [
     "Frontend Engineer",

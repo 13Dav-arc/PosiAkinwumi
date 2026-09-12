@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { PERSONAL_INFO } from "@/lib/data";
 import { Mail, Phone, ArrowUp, Briefcase } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+import { smoothScrollTo } from "@/lib/navigation";
 
 export default function MobileStickyBar() {
   const [isVisible, setIsVisible] = useState(false);
@@ -70,7 +71,11 @@ export default function MobileStickyBar() {
 
         <a
           href="#works"
-          className="hidden sm:flex items-center gap-1.5 px-3.5 h-11 min-h-[44px] rounded-full bg-surface-raised text-xs font-mono text-muted-fg hover:text-foreground hover:ring-1 hover:ring-[#d4a359] hover:border-transparent active:scale-90 transition-all border border-border focus-visible:ring-2 focus-visible:ring-accent"
+          onClick={(e) => {
+            e.preventDefault();
+            smoothScrollTo("works");
+          }}
+          className="hidden sm:flex items-center gap-1.5 px-3.5 h-11 min-h-[44px] rounded-full bg-surface-raised text-xs font-mono text-muted-fg hover:text-foreground hover:ring-1 hover:ring-[#d4a359] hover:border-transparent active:scale-90 transition-all border border-border focus-visible:ring-2 focus-visible:ring-accent cursor-pointer"
           aria-label="Jump to Works section"
         >
           <Briefcase className="h-3.5 w-3.5 text-accent" />
@@ -85,7 +90,11 @@ export default function MobileStickyBar() {
         {/* Scroll To Top Button */}
         <a
           href="#main-content"
-          className="flex items-center justify-center h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-foreground text-background font-bold hover:ring-1 hover:ring-[#d4a359] active:scale-90 transition-all shadow-md focus-visible:ring-2 focus-visible:ring-accent"
+          onClick={(e) => {
+            e.preventDefault();
+            smoothScrollTo("main-content");
+          }}
+          className="flex items-center justify-center h-11 w-11 min-h-[44px] min-w-[44px] rounded-full bg-foreground text-background font-bold hover:ring-1 hover:ring-[#d4a359] active:scale-90 transition-all shadow-md focus-visible:ring-2 focus-visible:ring-accent cursor-pointer"
           aria-label="Scroll to top of page"
         >
           <ArrowUp className="h-4 w-4" />

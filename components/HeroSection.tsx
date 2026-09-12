@@ -7,6 +7,7 @@ import { Mail, Phone, Github, Linkedin, ArrowDown } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Magnetic from "@/components/Magnetic";
+import { smoothScrollTo } from "@/lib/navigation";
 
 const TOOL_ICONS: Record<string, React.ReactNode> = {
   claude: (
@@ -412,7 +413,11 @@ export default function HeroSection() {
         <span>OVERVIEW</span>
         <a
           href="#works"
-          className="editorial-link flex items-center gap-1.5 hover:text-foreground transition-colors py-2 focus-visible:ring-2 focus-visible:ring-accent rounded"
+          onClick={(e) => {
+            e.preventDefault();
+            smoothScrollTo("works");
+          }}
+          className="editorial-link flex items-center gap-1.5 hover:text-foreground transition-colors py-2 focus-visible:ring-2 focus-visible:ring-accent rounded cursor-pointer"
         >
           <span>Selected Work</span>
           <ArrowDown className="h-3 w-3 animate-bounce" />

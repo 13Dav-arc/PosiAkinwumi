@@ -7,10 +7,12 @@ import WorksShowcase from "@/components/WorksShowcase";
 import CompetenciesMatrix from "@/components/CompetenciesMatrix";
 import ContactOutro from "@/components/ContactOutro";
 import MobileStickyBar from "@/components/MobileStickyBar";
+import SectionScrollHandler from "@/components/SectionScrollHandler";
 
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-accent selection:text-accent-fg transition-colors duration-300">
+      <SectionScrollHandler />
       <Navbar />
       <main>
         <HeroSection />

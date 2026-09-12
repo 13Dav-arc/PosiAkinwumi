@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { PERSONAL_INFO } from "@/lib/data";
+import { smoothScrollTo } from "@/lib/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 import Magnetic from "@/components/Magnetic";
 import { ArrowUpRight } from "lucide-react";
@@ -16,6 +18,8 @@ const NAV_ITEMS = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   // Lock body scroll and halt Lenis momentum when mobile menu is open
   useEffect(() => {
@@ -57,24 +61,22 @@ export default function Navbar() {
     return () => window.removeEventListener("resize", handleResize);
   }, [isOpen]);
 
-  // Smooth hash navigation without aborting
+  // Clean URL in-page smooth navigation (prevents raw #hash appending)
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href.startsWith("#")) {
       e.preventDefault();
       const targetId = href.slice(1);
-      const targetElement = document.getElementById(targetId);
 
       // Close the drawer first to restore body & Lenis scrolling
       setIsOpen(false);
 
-      // Smoothly scroll to the target after unblocking the scroll
-      requestAnimationFrame(() => {
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: "smooth" });
-        } else {
-          window.location.hash = href;
-        }
-      });
+      if (pathname === "/") {
+        requestAnimationFrame(() => {
+          smoothScrollTo(targetId);
+        });
+      } else {
+        router.push(`/?section=${targetId}`);
+      }
     } else {
       setIsOpen(false);
     }
@@ -85,6 +87,14 @@ export default function Navbar() {
       {/* Accessibility Skip Link */}
       <a
         href="#main-content"
+        onClick={(e) => {
+          e.preventDefault();
+          if (pathname === "/") {
+            smoothScrollTo("main-content");
+          } else {
+            router.push("/");
+          }
+        }}
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-accent focus:text-accent-fg focus:font-mono focus:text-sm focus:rounded-md focus:shadow-xl focus:outline-none"
       >
         Skip to main content
@@ -122,7 +132,8 @@ export default function Navbar() {
               <a
                 key={item.href}
                 href={item.href}
-                className="editorial-link hover:text-foreground transition-colors py-2 focus-visible:ring-2 focus-visible:ring-accent rounded"
+                onClick={(e) => handleNavClick(e, item.href)}
+                className="editorial-link hover:text-foreground transition-colors py-2 focus-visible:ring-2 focus-visible:ring-accent rounded cursor-pointer"
               >
                 {item.label}
               </a>
@@ -190,7 +201,7 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Minimalist Top-Down Dropdown (< lg) */}
+      {/* Mobile Minimalist Top-Down Dropdown (< lg) with High-Contrast Light-Mode Background */}
       {isOpen && (
         <>
           {/* Subtle backdrop to dismiss on tap outside */}
@@ -200,11 +211,11 @@ export default function Navbar() {
             aria-hidden="true"
           />
 
-          {/* Sleek, Content-Hugging Dropdown Panel */}
+          {/* Solid, Content-Hugging Dropdown Panel */}
           <div
             id="mobile-nav-menu"
             data-lenis-prevent
-            className="fixed inset-x-0 top-16 sm:top-20 z-50 bg-background/95 backdrop-blur-xl border-b border-border shadow-2xl px-6 py-3 lg:hidden animate-in fade-in slide-in-from-top-2 duration-200"
+            className="fixed inset-x-0 top-16 sm:top-20 z-50 bg-[#fbfbf9] dark:bg-[#121212] border-b border-border shadow-2xl px-6 py-4 lg:hidden animate-in fade-in slide-in-from-top-2 duration-200"
           >
             <nav className="flex flex-col" aria-label="Mobile Navigation">
               {NAV_ITEMS.map((item) => (
@@ -212,7 +223,7 @@ export default function Navbar() {
                   key={item.href}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className="text-lg font-medium text-muted-fg hover:text-[#d4a359] transition-colors py-3 flex items-center justify-between group"
+                  className="text-neutral-900 dark:text-neutral-100 hover:text-[#d4a359] dark:hover:text-[#d4a359] transition-colors py-3 flex items-center justify-between text-lg font-medium group"
                 >
                   <span>{item.label}</span>
                   {/* Subtle warm gold hover indicator dot */}
