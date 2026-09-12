@@ -19,19 +19,19 @@ export default function ContactOutro() {
     if (prefersReduced) return;
 
     const ctx = gsap.context(() => {
-      // Subtle editorial tracking expansion on scroll
+      // GPU-composited smooth reveal on scroll (no letterSpacing layout reflow)
       gsap.fromTo(
         headlineRef.current,
-        { letterSpacing: "-0.03em", opacity: 0.8 },
+        { opacity: 0.6, y: 16 },
         {
-          letterSpacing: "0.04em",
           opacity: 1,
+          y: 0,
           ease: "power2.out",
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top 80%",
-            end: "bottom 80%",
-            scrub: 0.8,
+            start: "top 85%",
+            end: "top 60%",
+            scrub: 0.5,
           },
         }
       );

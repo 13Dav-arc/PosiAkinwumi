@@ -32,13 +32,16 @@ export default function MobileStickyBar() {
     };
   }, []);
 
-  if (!isVisible || isMenuOpen) return null;
-
   return (
     <aside
-      className="fixed bottom-3 inset-x-3 z-40 md:hidden flex items-center justify-between p-1.5 rounded-full bg-surface/90 backdrop-blur-xl border border-border shadow-2xl transition-all duration-300 animate-in fade-in slide-in-from-bottom-3"
+      className={`fixed bottom-3 inset-x-3 z-40 md:hidden flex items-center justify-between p-1.5 rounded-full bg-surface/90 backdrop-blur-xl border border-border shadow-2xl transition-all duration-300 will-change-transform ${
+        isVisible && !isMenuOpen
+          ? "opacity-100 translate-y-0 pointer-events-auto"
+          : "opacity-0 translate-y-4 pointer-events-none"
+      }`}
       style={{ paddingBottom: "max(0.375rem, env(safe-area-inset-bottom))" }}
       aria-label="Mobile Quick Actions"
+      aria-hidden={!isVisible || isMenuOpen}
     >
       <div className="flex items-center gap-1">
         <a

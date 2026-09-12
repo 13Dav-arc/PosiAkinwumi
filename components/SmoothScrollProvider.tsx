@@ -11,60 +11,60 @@ export default function SmoothScrollProvider({
   children: React.ReactNode;
 }) {
   useEffect(() => {
-    // Strict client execution guard
     if (typeof window === "undefined") return;
 
-    // Register ScrollTrigger safely
     gsap.registerPlugin(ScrollTrigger);
 
-    // Skip Lenis virtual touch scrolling on mobile viewports (< 1024px)
-    // Mobile browsers have native hardware momentum scrolling on the GPU compositor thread
-    const isMobile = window.innerWidth < 1024;
-    if (isMobile) {
-      delete (window as any).lenis;
-      return;
-    }
+    let lenis: Lenis | null = null;
+    let tickerCallback: ((time: number) => void) | null = null;
 
-    // Instantiate Lenis for desktop with touch completely disabled
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
-      wheelMultiplier: 0.9,
-      touch: false, // Critical: let native browser compositor handle any touch input
-    } as any);
+    const initLenis = () => {
+      // Mobile & Tablet (< 1024px): Skip Lenis for 100% native GPU compositor momentum
+      if (window.innerWidth < 1024) {
+        if (lenis) {
+          if (tickerCallback) gsap.ticker.remove(tickerCallback);
+          delete (window as any).lenis;
+          lenis.destroy();
+          lenis = null;
+          tickerCallback = null;
+        }
+        return;
+      }
 
-    // Expose lenis instance globally for programmatic smooth scrolling on desktop
-    (window as any).lenis = lenis;
+      // Desktop (>= 1024px): Initialize smooth wheel with touch disabled
+      if (!lenis) {
+        lenis = new Lenis({
+          duration: 1.1,
+          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          orientation: "vertical",
+          gestureOrientation: "vertical",
+          smoothWheel: true,
+          wheelMultiplier: 0.9,
+          touch: false, // Strict: never hijack touch gestures
+        } as any);
 
-    // Synchronize Lenis scroll updates with GSAP ScrollTrigger
-    lenis.on("scroll", ScrollTrigger.update);
+        (window as any).lenis = lenis;
+        lenis.on("scroll", ScrollTrigger.update);
 
-    // Ticker callback for unified 60 FPS requestAnimationFrame loop
-    const tickerCallback = (time: number) => {
-      lenis.raf(time * 1000);
+        tickerCallback = (time: number) => {
+          lenis?.raf(time * 1000);
+        };
+
+        gsap.ticker.add(tickerCallback);
+        gsap.ticker.lagSmoothing(0);
+      }
     };
 
-    gsap.ticker.add(tickerCallback);
-    gsap.ticker.lagSmoothing(0);
+    initLenis();
+    window.addEventListener("resize", initLenis);
 
-    // Clean up if window is resized down to mobile
-    const handleResize = () => {
-      if (window.innerWidth < 1024 && (window as any).lenis) {
-        gsap.ticker.remove(tickerCallback);
+    return () => {
+      window.removeEventListener("resize", initLenis);
+      if (tickerCallback) gsap.ticker.remove(tickerCallback);
+      if (lenis) {
         delete (window as any).lenis;
         lenis.destroy();
       }
-    };
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      gsap.ticker.remove(tickerCallback);
-      delete (window as any).lenis;
-      lenis.destroy();
     };
   }, []);
 

@@ -44,8 +44,8 @@ export default function CompetenciesMatrix() {
 
         {/* 6-Domain Editorial Grid on Desktop, Clean Swipe on Mobile/Tablet (Zero Scroll Hijacking) */}
         <div
-          className="flex lg:grid overflow-x-auto lg:overflow-visible snap-x snap-mandatory scrollbar-none gap-4 lg:gap-8 pb-4 lg:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0 lg:grid-cols-3 touch-pan-y"
-          style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-y" }}
+          className="flex lg:grid overflow-x-auto lg:overflow-visible snap-x snap-mandatory scrollbar-none gap-4 lg:gap-8 pb-4 lg:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0 lg:grid-cols-3 overscroll-x-contain overscroll-y-auto"
+          style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-x pan-y" }}
         >
           {COMPETENCIES.map((category) => (
             <div

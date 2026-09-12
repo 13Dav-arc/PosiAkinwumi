@@ -19,7 +19,8 @@ export default function WorksShowcase() {
     if (!mobileScrollRef.current) return;
     const { scrollLeft, offsetWidth } = mobileScrollRef.current;
     const index = Math.round(scrollLeft / (offsetWidth * 0.85));
-    setActiveMobileIndex(Math.min(Math.max(index, 0), PROJECTS.length - 1));
+    const newIndex = Math.min(Math.max(index, 0), PROJECTS.length - 1);
+    setActiveMobileIndex((prev) => (prev !== newIndex ? newIndex : prev));
   };
 
   useEffect(() => {
@@ -128,8 +129,8 @@ export default function WorksShowcase() {
           ref={mobileScrollRef}
           onScroll={handleMobileScroll}
           data-lenis-prevent
-          className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-6 pt-2 overscroll-x-contain overscroll-y-auto touch-pan-y"
-          style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-y" }}
+          className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-6 pt-2 overscroll-x-contain overscroll-y-auto"
+          style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-x pan-y" }}
         >
           {PROJECTS.map((project) => (
             <div
